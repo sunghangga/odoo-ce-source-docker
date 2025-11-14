@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  web:
+    image: hospits/odoo:18-source
+    depends_on:
+      - db
+    ports:
+      - "8069:8069" # Odoo web interface
+      - "8072:8072" # Additional ports if needed
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    restart: unless-stopped
+    networks:
+      - odoo-net
+
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    ports:
+      - "5432:5432"
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - odoo-net
+
+volumes:
+  odoo-web-data:
+  odoo-db-data:
+
+networks:
+  odoo-net:
+    driver: bridge
