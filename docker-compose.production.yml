@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: hospits/odoo:18-source
+    image: odoo:18-source
     depends_on:
       - db
     ports:
